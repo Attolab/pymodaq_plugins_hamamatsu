@@ -27,4 +27,4 @@ Viewers
 Known issues
 ===============
 
-The acquisition frame rate is lower than what is obtained with the constructor software. On the camera the frame rate is limited to a few FPS in full frame. This is because so far, images are only captured in 'snap' mode. A 'stream' mode looks available, and could be implemented in the future.
+The acquisition frame rate is lower than what is obtained with the constructor software. On the camera used for testing, the frame rate is limited to a few FPS in full frame. This is because so far, images are only captured in 'snap' mode. A 'stream' mode looks available, and could be implemented in the future.
