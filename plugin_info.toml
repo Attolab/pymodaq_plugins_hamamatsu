@@ -4,13 +4,13 @@
 SHORT_PLUGIN_NAME = 'hamamatsu'  #to be modified, for instance daqmx then rename the module name:
 # (pymodaq_plugins_template become pymodaq_plugins_daqmx for instance)
 
-package-url = 'https://github.com/CEMES-CNRS/pymodaq_plugins_template' #to modify
-description = 'some word about your plugin'
+package-url = 'https://github.com/Attolab/pymodaq_plugins_hamamatsu' #to modify
+description = 'Plugin for Hamamatsu cameras based on DCAM-API'
 
-author = 'Author Name'
-author-email = 'Author email'
+author = 'Romain Géneaux'
+author-email = 'romain.geneaux@cea.fr'
 license = 'MIT'
 
 [plugin-install]
 #packages required for your plugin:
-packages-required = []
+packages-required = ['numpy']

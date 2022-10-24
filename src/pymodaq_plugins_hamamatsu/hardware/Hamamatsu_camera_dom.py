@@ -609,7 +609,7 @@ class HamamatsuCamera():
         self.checkStatus(self.dcam.dcam_idle(self.camera_handle),
                          "dcam_idle")
 
-        print("max camera backlog was %s of %s"%(self.max_backlog, self.number_image_buffers))
+        # print("max camera backlog was %s of %s"%(self.max_backlog, self.number_image_buffers))
         self.max_backlog = 0
 
         # Free image buffers.
