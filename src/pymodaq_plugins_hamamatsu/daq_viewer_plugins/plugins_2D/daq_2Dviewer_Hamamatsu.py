@@ -4,6 +4,8 @@ from pymodaq.daq_utils.daq_utils import ThreadCommand, getLineInfo, DataFromPlug
 from pymodaq.daq_viewer.utility_classes import DAQ_Viewer_base, comon_parameters, main
 from pymodaq.daq_utils.parameter import Parameter
 
+import pylablib as pll
+pll.par["devices/dlls/dcamapi"] = "C:/Windows/System32"
 from pylablib.devices import DCAM
 from qtpy import QtWidgets, QtCore
 from time import perf_counter
@@ -21,8 +23,7 @@ class DAQ_2DViewer_Hamamatsu(DAQ_Viewer_base):
         {'title': 'Camera model:', 'name': 'camera_name', 'type': 'str', 'value': '', 'readonly': True},
         {'title': 'Update ROI', 'name': 'update_roi', 'type': 'bool_push', 'value': False},
         {'title': 'Clear ROI+Bin', 'name': 'clear_roi', 'type': 'bool_push', 'value': False},
-        {'title': 'X binning', 'name': 'x_binning', 'type': 'int', 'value': 1},
-        {'title': 'Y binning', 'name': 'y_binning', 'type': 'int', 'value': 1},
+        {'title': 'Binning', 'name': 'binning', 'type': 'list', 'values': [1,2]},
         {'title': 'Image width', 'name': 'hdet', 'type': 'int', 'value': 1, 'readonly': True},
         {'title': 'Image height', 'name': 'vdet', 'type': 'int', 'value': 1, 'readonly': True},
         {'title': 'Timing', 'name': 'timing_opts', 'type': 'group', 'children':
@@ -80,11 +81,11 @@ class DAQ_2DViewer_Hamamatsu(DAQ_Viewer_base):
                 self.settings.child('ROIselect', 'y0').setValue(0)
                 param.setValue(False)
 
-        if param.name() in ['x_binning', 'y_binning']:
+        if param.name() == 'binning':
             # We handle ROI and binning separately for clarity
             (x0, w, y0, h, *_) = self.controller.get_roi()  # Get current ROI
-            xbin = self.settings.child('x_binning').value()
-            ybin = self.settings.child('y_binning').value()
+            xbin = self.settings.child('binning').value()
+            ybin = self.settings.child('binning').value()
             new_roi = (x0, w, xbin, y0, h, ybin)
             self.update_rois(new_roi)
 
@@ -93,11 +94,10 @@ class DAQ_2DViewer_Hamamatsu(DAQ_Viewer_base):
                 wdet, hdet = self.controller.get_detector_size()
                 # self.settings.child('ROIselect', 'x0').setValue(0)
                 # self.settings.child('ROIselect', 'width').setValue(wdet)
-                self.settings.child('x_binning').setValue(1)
+                self.settings.child('binning').setValue(1)
                 #
                 # self.settings.child('ROIselect', 'y0').setValue(0)
                 # new_height = self.settings.child('ROIselect', 'height').setValue(hdet)
-                self.settings.child('y_binning').setValue(1)
 
                 new_roi = (0, wdet, 1, 0, hdet, 1)
                 self.update_rois(new_roi)
@@ -124,7 +124,7 @@ class DAQ_2DViewer_Hamamatsu(DAQ_Viewer_base):
                                    idx=self.settings.child('camera_index').value()))
 
         # Get camera name
-        self.settings.child('camera_model').setValue(self.controller.get_device_info()[1])
+        self.settings.child('camera_name').setValue(self.controller.get_device_info()[1])
 
         # Set exposure time
         self.controller.set_exposure(self.settings.child('timing_opts', 'exposure_time').value() / 1000)
@@ -135,8 +135,7 @@ class DAQ_2DViewer_Hamamatsu(DAQ_Viewer_base):
         # Update image parameters
         (*_, hbin, vbin) = self.controller.get_roi()
         height, width = self.controller._get_data_dimensions_rc()
-        self.settings.child('x_binning').setValue(hbin)
-        self.settings.child('y_binning').setValue(vbin)
+        self.settings.child('binning').setValue(hbin)
         self.settings.child('hdet').setValue(width)
         self.settings.child('vdet').setValue(height)
 
