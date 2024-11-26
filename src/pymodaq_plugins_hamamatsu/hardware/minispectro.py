@@ -127,15 +127,29 @@ class MiniSpectro:
     # # Read current parameters
     # print('Integration time =', get_parameter[1].unIntegrationTime, 'µs')
 
-    # # Adjust and set new parameters values
-    # get_parameter[1].unIntegrationTime = 20000
-    # set_parameter = DLL.USB_SetParameter(handle, unit_param)
+    def set_parameter(self, integ_time=None, gain=None, trigger_edge=None, trigger_mode=None):
+        """
+        Set specified parameter with specified value
+        """
+        # params = {a: integ_time, b: gain, c: trigger_edge, d: trigger_mode}
+        # for key, value in params.items():
+        #     if key is not None:
+        if integ_time is not None:
+            DLL.USB_GetParameter(self._handle, unit_param)[1].unIntegrationTime = integ_time
+        elif gain is not None:
+            DLL.USB_GetParameter(self._handle, unit_param)[1].byGain = gain
+        elif trigger_edge is not None:
+            DLL.USB_GetParameter(self._handle, unit_param)[1].byTriggerEdge = trigger_edge
+        elif trigger_mode is not None:
+            DLL.USB_GetParameter(self._handle, unit_param)[1].byTriggerMode = trigger_mode
+        DLL.USB_SetParameter(self._handle, unit_param)
+    
+    def set_default(self):
+        """
+        Set all parameters to default
+        """
+        DLL.USB_SetEepromDefaultParameter(self._handle, 0)
 
-    # # Read new parameters values
-    # print('Integration time =', get_parameter[1].unIntegrationTime, 'µs')
-
-    # # Set default
-    # set_default = DLL.USB_SetEepromDefaultParameter(handle, 0)
 
     def close(self):
         DLL.USB_ClosePipe(self._handle)
