@@ -68,19 +68,6 @@ class MiniSpectro:
 
         _pipe = DLL.USB_OpenPipe(self._handle)
         print('device_pipe =', _pipe)
-
-    def get_parameter(self):
-        """
-        Get parameter from device
-        Return: 0 -> OK
-        """
-        return DLL.USB_GetParameter(self._handle, unit_param)[1]
-        # print('get_parameter =', _get_parameter)
-
-        # self.integration_time = _get_parameter[1].unIntegrationTime
-        # self.gain = _get_parameter[1].byGain
-        # self.trigger_edge = _get_parameter[1].byTriggerEdge
-        # self.trigger_mode = _get_parameter[1].byTriggerMode
     
     def integration_time(self):
         """
