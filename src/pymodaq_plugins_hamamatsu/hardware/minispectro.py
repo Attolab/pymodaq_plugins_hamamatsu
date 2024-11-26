@@ -77,7 +77,7 @@ class MiniSpectro:
         -------
         integ_time: int
             Range is 5000µs-10000000µs (5ms-10s). The minimum integration times
-            differ depending on the model
+            differ depending on the model. Minimum is 10000 µs for C10083CA.
         """
         integ_time = DLL.USB_GetParameter(self._handle, unit_param)[1].unIntegrationTime
         return integ_time
