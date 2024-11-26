@@ -84,7 +84,7 @@ class MiniSpectro:
 
     def gain(self):
         """
-        Get the gain status
+        Get the gain setting
 
         Returns
         -------
