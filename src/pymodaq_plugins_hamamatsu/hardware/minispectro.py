@@ -138,7 +138,35 @@ class MiniSpectro:
         Set all parameters to default
         """
         DLL.USB_SetEepromDefaultParameter(self._handle, 0)
+    
+    def read_unit_information(self):
+        DLL.USB_ReadUnitInformation(self._handle, unit_info)[0]
+        self.unit_id = bytearray(unit_info.arybyUnitID).decode('ascii')
+        self.sensor_name = bytearray(unit_info.arybySensorName).decode('ascii')
+        self.serial_number = bytearray(unit_info.arybySerialNumber).decode('ascii')
+        self.reserved = bytearray(unit_info.arybyReserved)
+        self.wl_upper = unit_info.usWaveLengthUpper
+        self.wl_lower = unit_info.usWaveLengthLower
+    
+    def write_unit_information(self, flag=None):
+        """
+        Writes information into USB device. Unit ID, sensor name, serial number and 
+        spectral response range (upper and lower limits) can be written.
 
+        Parameters
+        ----------
+        flag: hex
+            The flag value needs to be 0xAA to allow writing to device.
+        """
+        DLL.USB_WriteUnitInformation(self._handle, unit_info, flag)
+
+    def read_calibration_value(self):
+        return DLL.USB_ReadCalibrationValue(self._handle, self.c_array)
+    
+
+
+    def write_calibration_value(self, flag=None):
+        DLL.USB_WriteCalibrationValue(self._handle, self.calibration_array, flag)
 
     def close(self):
         DLL.USB_ClosePipe(self._handle)
