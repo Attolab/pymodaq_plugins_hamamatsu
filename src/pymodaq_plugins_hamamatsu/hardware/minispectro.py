@@ -120,9 +120,6 @@ class MiniSpectro:
         """
         Set specified parameter with specified value
         """
-        # params = {a: integ_time, b: gain, c: trigger_edge, d: trigger_mode}
-        # for key, value in params.items():
-        #     if key is not None:
         if integ_time is not None:
             DLL.USB_GetParameter(self._handle, unit_param)[1].unIntegrationTime = integ_time
         elif gain is not None:
@@ -167,6 +164,10 @@ class MiniSpectro:
 
     def write_calibration_value(self, flag=None):
         DLL.USB_WriteCalibrationValue(self._handle, self.calibration_array, flag)
+
+    def get_sensor_data(self):
+        DLL.USB_GetSensorData(self._handle, self._pipe, 2048, self.buffer)
+    
 
     def close(self):
         DLL.USB_ClosePipe(self._handle)
