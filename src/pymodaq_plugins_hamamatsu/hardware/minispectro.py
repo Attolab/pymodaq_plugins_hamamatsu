@@ -80,6 +80,7 @@ class MiniSpectro:
 
         self.read_unit_information()
         self.get_parameter()
+        self.read_calibration_value()
     
     def get_parameter(self):
         """
