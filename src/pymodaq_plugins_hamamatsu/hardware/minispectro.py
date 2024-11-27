@@ -147,55 +147,12 @@ class MiniSpectro:
 
 if __name__ == "__main__":
     spectro = MiniSpectro('tm_ccd')
-    # print(spectro.integration_time())
-    spectro.close()
+    # print(spectro.read_calibration_value())
+    # print(spectro.c_array)
+    # # print(spectro.integration_time())
+    # spectro.close()
 
 
-# mlist = System.Array[System.Int16]([9 for _ in range(4)])  # Define as an array that can be used in .NET
-# mnum = 1
-# r = DLL.USB2_getModuleConnectionList(mlist,mnum)  # Get USB module list
-# print(r)
-
-# mspec = Str.CSpectroInformation()  # Get structure
-# r = DLL.USB2_getSpectroInformation(sid,mspec)  # Get module information
-# print(r[1].unit)
-# print(mspec.sensor)
-
-# r = DLL.USB2_open(sid)  # Open device
-# print(r)
-
-# mode = 0  # Set capture mode (specified no. of times measurement)
-# r = DLL.USB2_setCaptureMode(sid,mode)  #Set capture mode
-# print(r)
-
-# position = 1  # Set data position
-# r = DLL.USB2_setDataPosition(sid,position)
-# #print(r)
-
-# count = 1  # Set specified no. of times
-# r = DLL.USB2_setDataCount(sid, count)
-# #print(r)
-
-# transmit = 1  # Set data transmit number
-# r = DLL.USB2_setDataTransmit(sid, transmit)
-# #print(r)
-
-# cycle = 12000  # Set exposure cycle
-# r = DLL.USB2_setExposureCycle(sid, cycle)
-# #print(r)
-
-# sec = 10000  # Set exposure time
-# r = DLL.USB2_setExposureTime(sid, sec)
-# #print(r)
-
-# mode = 0  # Sensor gain mode 
-# gain = 0  # High gain
-# r = DLL.USB2_setGain(sid,mode,gain)  # Set gain
-# #print(r)
-
-# offset = 0
-# r = DLL.USB2_setAdOffset(sid,offset)  # Set A/D offset
-# #print(r)
 
 # r = DLL.USB2_getImageSize(sid,x,y)  # Get pixel size after bening. Note that value of x,y  are initial value.
 # x = r[1]
