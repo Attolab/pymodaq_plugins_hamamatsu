@@ -168,8 +168,9 @@ class MiniSpectro:
         DLL.USB_WriteCalibrationValue(self._handle, self._origin_c_array, flag)
 
     def get_sensor_data(self):
-        DLL.USB_GetSensorData(self._handle, self._pipe, 2048, self.buffer)
-    
+        x = np.linspace(0, 2047, 2048)
+        y = list(DLL.USB_GetSensorData(self._handle, self._pipe, 2048, self.buffer_array)[1])
+        return x, y
 
     def close(self):
         DLL.USB_ClosePipe(self._handle)
