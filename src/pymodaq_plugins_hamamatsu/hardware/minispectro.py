@@ -68,14 +68,15 @@ class MiniSpectro:
         self._pipe = DLL.USB_OpenPipe(self._handle)
         print('device_pipe =', self._pipe)
 
-        # self.test_array = System.Array[System.Double]([206.6907787, 
-        #                                             0.3771377233, 
-        #                                             3.669128424e-5, 
-        #                                             -1.287399061e-8,
-        #                                             5.788371505e-12,
-        #                                             -1.2738255e-15])
-
-        self.c_array = System.Array[System.Double]([0.0 for _ in range(6)])
+        self._c_array = System.Array[System.Double]([0.0 for _ in range(6)])
+        self._origin_c_array = System.Array[System.Double]([206.6901787, 
+                                                            0.3771377233, 
+                                                            3.669128424e-5, 
+                                                            -1.287399061e-8,
+                                                            5.788371505e-12,
+                                                            -1.2738255e-15])
+        
+        self.buffer_array = System.Array[System.UInt16]([0 for _ in range(2048)])
 
         self.read_unit_information()
         self.get_parameter()
