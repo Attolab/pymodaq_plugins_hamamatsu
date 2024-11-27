@@ -15,6 +15,7 @@ clr.AddReference("specu1b")  # Enter driver name without .dll
 
 from specu1b_DLL import specu1b, UNIT_PARAMETER, UNIT_INFORMATION  # Loading DLL
 
+import time
 import numpy as np
 import matplotlib.pyplot as plt
 import System
@@ -170,17 +171,20 @@ class MiniSpectro:
 
 if __name__ == "__main__":
     spectro = MiniSpectro('tm_ccd')
-    x, y = spectro.get_sensor_data()
 
-    fig = plt.figure(figsize=(6, 4))
-    ax = fig.add_subplot(1, 1, 1)
+    for i in range(10):
+        x, y = spectro.get_sensor_data()
+        print(y[100])
+        time.sleep(1)
+    # fig = plt.figure(figsize=(6, 4))
+    # ax = fig.add_subplot(1, 1, 1)
 
-    print(x)
-    print(y)
+    # print(x)
+    # print(y)
 
-    ax.plot(x , y)
+    # ax.plot(x , y)
 
-    plt.tight_layout()
-    plt.show()
+    # plt.tight_layout()
+    # plt.show()
 
     spectro.close()
