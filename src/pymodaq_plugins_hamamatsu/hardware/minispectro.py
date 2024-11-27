@@ -64,66 +64,54 @@ class MiniSpectro:
         self._handle = DLL.USB_OpenDevice(_pids[device_name])
         print('handle = ', self._handle)
 
-        _check = DLL.USB_CheckDevice(self._handle)
-        print('check = ', _check)
+        self._check = DLL.USB_CheckDevice(self._handle)
+        print('check = ', self._check)
 
-        _pipe = DLL.USB_OpenPipe(self._handle)
-        print('device_pipe =', _pipe)
+        self._pipe = DLL.USB_OpenPipe(self._handle)
+        print('device_pipe =', self._pipe)
+
+        # self.test_array = System.Array[System.Double]([206.6907787, 
+        #                                             0.3771377233, 
+        #                                             3.669128424e-5, 
+        #                                             -1.287399061e-8,
+        #                                             5.788371505e-12,
+        #                                             -1.2738255e-15])
+
+        self.c_array = System.Array[System.Double]([0.0 for _ in range(6)])
+
+        self.read_unit_information()
+        self.get_parameter()
     
-    def integration_time(self):
+    def get_parameter(self):
         """
-        Get integration time
+        Get currently set parameters.
 
-        Returns
-        -------
-        integ_time: int
+        Parameters
+        ----------
+        integration_time: int
             Range is 5000µs-10000000µs (5ms-10s). The minimum integration times
             differ depending on the model. Minimum is 10000 µs for C10083CA.
-        """
-        integ_time = DLL.USB_GetParameter(self._handle, unit_param)[1].unIntegrationTime
-        return integ_time
-
-    def gain(self):
-        """
-        Get the gain setting
-
-        Returns
-        -------
         gain: hex
             0x00 (Low gain)
             0x01 (High gain)
             0xFF (Gain switching function is unavailable)
-        """
-        gain = hex(DLL.USB_GetParameter(self._handle, unit_param)[1].byGain)
-        return gain
-
-    def trigger_edge(self):
-        """
-        Get trigger edge setting
-
-        Returns
-        -------
-        trig_edge: hex
+        trigger_edge: hex
             0x00 (Rising edge (H level))
             0x01 (Falling edge (L level))
             0xFF (External trigger function is unavailable)
+        trigger_mode: hex
+            0x00 (Rising edge (H level))
+            0x01 (Falling edge (L level))
+            0xFF (External trigger function is unavailable)
+        reserved_param:
+            Reserved byte
         """
-        trig_edge = hex(DLL.USB_GetParameter(self._handle, unit_param)[1].byTriggerEdge)
-        return trig_edge
-
-    def trigger_mode(self):
-        """
-        Get trigger mode setting
-
-        Return
-        ------
-        trig_mode: hex
-            0x00 (Internal trigger mode (free run))
-            0x01 (External trigger mode1 (edge trigger detection))
-            0xFF (External trigger mode2 (gate trigger mode))
-        """
-        trig_mode = hex(DLL.USB_GetParameter(self._handle, unit_param)[1].byTriggerMode)
-        return trig_mode
+        DLL.USB_GetParameter(self._handle, unit_param)
+        self.integration_time = unit_param.unIntegrationTime
+        self.gain = hex(unit_param.byGain)
+        self.trigger_edge = hex(unit_param.byTriggerEdge)
+        self.trigger_mode = hex(unit_param.byTriggerMode)
+        self.reserved_param = unit_param.byReserved
     
     # # Read current parameters
     # print('Integration time =', get_parameter[1].unIntegrationTime, 'µs')
