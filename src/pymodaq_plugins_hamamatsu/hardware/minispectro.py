@@ -162,7 +162,10 @@ class MiniSpectro:
         self.calibration_list = list(self._c_array)
 
     def write_calibration_value(self, flag=None):
-        DLL.USB_WriteCalibrationValue(self._handle, self.calibration_array, flag)
+        """
+        Write calibration values with original values. flag need to be 0xAA
+        """
+        DLL.USB_WriteCalibrationValue(self._handle, self._origin_c_array, flag)
 
     def get_sensor_data(self):
         DLL.USB_GetSensorData(self._handle, self._pipe, 2048, self.buffer)
