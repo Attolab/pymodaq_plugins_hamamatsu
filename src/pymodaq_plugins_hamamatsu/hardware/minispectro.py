@@ -15,10 +15,8 @@ clr.AddReference("specu1b")  # Enter driver name without .dll
 
 from specu1b_DLL import specu1b, UNIT_PARAMETER, UNIT_INFORMATION  # Loading DLL
 
-# from time import sleep
-# from decimal import *
-# import numpy as np
-# import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
 import System
 
 DLL = specu1b()     # Class instantiation
