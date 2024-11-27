@@ -19,15 +19,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 import System
 
-DLL = specu1b()     # Class instantiation
+DLL = specu1b()
 unit_param = UNIT_PARAMETER()
 unit_info = UNIT_INFORMATION()
-
-# sid = 0
-# frame = System.Int64(0)
-# index = 0
-# x = 0
-# y = 0
 
 class MiniSpectro:
     """
@@ -112,9 +106,6 @@ class MiniSpectro:
         self.trigger_edge = hex(unit_param.byTriggerEdge)
         self.trigger_mode = hex(unit_param.byTriggerMode)
         self.reserved_param = unit_param.byReserved
-    
-    # # Read current parameters
-    # print('Integration time =', get_parameter[1].unIntegrationTime, 'µs')
 
     def set_parameter(self, integ_time=None, gain=None, trigger_edge=None, trigger_mode=None):
         """
