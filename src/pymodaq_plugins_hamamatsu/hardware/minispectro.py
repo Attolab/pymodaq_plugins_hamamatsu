@@ -158,9 +158,8 @@ class MiniSpectro:
         DLL.USB_WriteUnitInformation(self._handle, unit_info, flag)
 
     def read_calibration_value(self):
-        return DLL.USB_ReadCalibrationValue(self._handle, self.c_array)
-    
-
+        DLL.USB_ReadCalibrationValue(self._handle, self._c_array)
+        self.calibration_list = list(self._c_array)
 
     def write_calibration_value(self, flag=None):
         DLL.USB_WriteCalibrationValue(self._handle, self.calibration_array, flag)
