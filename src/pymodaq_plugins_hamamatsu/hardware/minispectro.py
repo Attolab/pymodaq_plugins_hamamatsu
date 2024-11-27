@@ -179,11 +179,20 @@ class MiniSpectro:
 
 if __name__ == "__main__":
     spectro = MiniSpectro('tm_ccd')
-    # print(spectro.read_calibration_value())
-    # print(spectro.c_array)
-    # # print(spectro.integration_time())
-    # spectro.close()
+    x, y = spectro.get_sensor_data()
 
+    fig = plt.figure(figsize=(6, 4))
+    ax = fig.add_subplot(1, 1, 1)
+
+    print(x)
+    print(y)
+
+    ax.plot(x , y)
+
+    plt.tight_layout()
+    plt.show()
+
+    spectro.close()
 
 
 # r = DLL.USB2_getImageSize(sid,x,y)  # Get pixel size after bening. Note that value of x,y  are initial value.
