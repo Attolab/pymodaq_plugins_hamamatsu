@@ -8,12 +8,12 @@ Created on Mon Nov 25 14:20:19 2024
 import clr
 import sys
 
-driver_dir = r"C:\\Program Files\\Hamamatsu\\TokuSpec"
+driver_dir = r"C:\\Program Files\\Hamamatsu\\TokuSpec"  # Path to specu1b.dll file folder
 sys.path.append(driver_dir)
 
-clr.AddReference("specu1b")  # Enter driver name without .dll
+clr.AddReference("specu1b")
 
-from specu1b_DLL import specu1b, UNIT_PARAMETER, UNIT_INFORMATION  # Loading DLL
+from specu1b_DLL import specu1b, UNIT_PARAMETER, UNIT_INFORMATION
 
 import time
 import numpy as np
