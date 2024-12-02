@@ -173,19 +173,28 @@ class MiniSpectro:
 if __name__ == "__main__":
     spectro = MiniSpectro('tm_ccd')
 
-    for i in range(10):
+    x, y = spectro.get_sensor_data()
+
+    plt.ion()
+
+    fig = plt.figure(figsize=(6, 4))
+    ax = fig.add_subplot(1, 1, 1)
+
+    ax.set_title('Hamamatsu C10083CA minispectrometer acquisition')
+    ax.set_xlabel('Pixels')
+    ax.set_ylabel('Intensity')
+    ax.set_xlim(min(x), max(x))
+
+    line, = ax.plot(x, y, 'r-')
+    
+    for _ in range(1000):
         x, y = spectro.get_sensor_data()
-        print(y[100])
-        time.sleep(1)
-    # fig = plt.figure(figsize=(6, 4))
-    # ax = fig.add_subplot(1, 1, 1)
 
-    # print(x)
-    # print(y)
+        ax.set_ylim(min(y) - 0.1 * min(y), max(y) + 0.1 * max(y))  # 10% top/bottom margins
 
-    # ax.plot(x , y)
+        line.set_ydata(y)
 
-    # plt.tight_layout()
-    # plt.show()
-
+        fig.canvas.draw()
+        fig.canvas.flush_events()
+    
     spectro.close()
