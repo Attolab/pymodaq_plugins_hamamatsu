@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Thu Oct 25 08:51:38 2018
+Created on Mon Nov 25 14:20:19 2024
 
-@author: AAA
+@author: Bastien Bégon
 """
 
 import clr
@@ -63,8 +63,8 @@ class MiniSpectro:
         self._pipe = DLL.USB_OpenPipe(self._handle)
         print('device_pipe =', self._pipe)
 
-        self._c_array = System.Array[System.Double]([0.0 for _ in range(6)])
-        self._origin_c_array = System.Array[System.Double]([206.6901787, 
+        self._c_array = System.Array[System.Double]([0.0 for _ in range(6)])    # 6 calibration values
+        self._origin_c_array = System.Array[System.Double]([206.6901787,        # Values from TokusPec at 1st boot
                                                             0.3771377233, 
                                                             3.669128424e-5, 
                                                             -1.287399061e-8,
@@ -110,7 +110,8 @@ class MiniSpectro:
 
     def set_parameter(self, integ_time=None, gain=None, trigger_edge=None, trigger_mode=None):
         """
-        Set specified parameter with specified value
+        Set specified parameter with specified value.
+        Integration time, gain, trigger edge and trigger mode can be set 
         """
         if integ_time is not None:
             DLL.USB_GetParameter(self._handle, unit_param)[1].unIntegrationTime = integ_time
