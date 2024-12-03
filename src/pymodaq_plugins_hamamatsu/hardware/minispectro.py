@@ -162,7 +162,7 @@ class MiniSpectro:
 
     def get_sensor_data(self):
         x = np.linspace(0, 2047, 2048)
-        y = list(DLL.USB_GetSensorData(self._handle, self._pipe, 2048, self.buffer_array)[1])
+        y = np.array(DLL.USB_GetSensorData(self._handle, self._pipe, 2048, self.buffer_array)[1])
         return x, y
 
     def close(self):
