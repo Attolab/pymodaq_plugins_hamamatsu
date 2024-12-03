@@ -12,7 +12,7 @@ from pymodaq_plugins_hamamatsu.hardware.minispectro import MiniSpectro
 #     for the class name and the file name.)
 # (3) this file should then be put into the right folder, namely IN THE FOLDER OF THE PLUGIN YOU ARE DEVELOPING:
 #     pymodaq_plugins_my_plugin/daq_viewer_plugins/plugins_1D
-class DAQ_1DViewer_Template(DAQ_Viewer_base):
+class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
     """ Instrument plugin class for a 1D viewer.
     
     This object inherits all functionalities to communicate with PyMoDAQ's DAQ_Viewer module through inheritance via
