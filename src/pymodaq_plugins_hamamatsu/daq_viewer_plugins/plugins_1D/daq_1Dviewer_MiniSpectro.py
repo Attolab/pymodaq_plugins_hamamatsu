@@ -18,6 +18,8 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
     This object inherits all functionalities to communicate with PyMoDAQ's DAQ_Viewer module through inheritance via
     DAQ_Viewer_base. It makes a bridge between the DAQ_Viewer module and the Python wrapper of a particular instrument.
 
+    C10083CA USB Hamamatsu mini-spectrometer
+
     TODO Complete the docstring of your plugin with:
         * The set of instruments that should be compatible with this instrument plugin.
         * With which instrument it has actually been tested.
@@ -78,8 +80,6 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
         initialized: bool
             False if initialization failed otherwise True
         """
-
-        raise NotImplemented  # TODO when writing your own plugin remove this line and modify the one below
         self.ini_detector_init(slave_controller=controller)
 
         if self.is_master:
