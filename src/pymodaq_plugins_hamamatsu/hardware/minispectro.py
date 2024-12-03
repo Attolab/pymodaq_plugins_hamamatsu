@@ -17,7 +17,6 @@ from specu1b_DLL import specu1b, UNIT_PARAMETER, UNIT_INFORMATION
 
 import time
 import numpy as np
-import matplotlib.pyplot as plt
 import System
 
 DLL = specu1b()
@@ -172,29 +171,3 @@ class MiniSpectro:
 
 if __name__ == "__main__":
     spectro = MiniSpectro('tm_ccd')
-
-    x, y = spectro.get_sensor_data()
-
-    plt.ion()
-
-    fig = plt.figure(figsize=(6, 4))
-    ax = fig.add_subplot(1, 1, 1)
-
-    ax.set_title('Hamamatsu C10083CA minispectrometer acquisition')
-    ax.set_xlabel('Pixels')
-    ax.set_ylabel('Intensity')
-    ax.set_xlim(min(x), max(x))
-
-    line, = ax.plot(x, y, 'r-')
-    
-    for _ in range(1000):
-        x, y = spectro.get_sensor_data()
-
-        ax.set_ylim(min(y) - 0.1 * min(y), max(y) + 0.1 * max(y))  # 10% top/bottom margins
-
-        line.set_ydata(y)
-
-        fig.canvas.draw()
-        fig.canvas.flush_events()
-    
-    spectro.close()
