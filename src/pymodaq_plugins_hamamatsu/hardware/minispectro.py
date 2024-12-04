@@ -140,6 +140,15 @@ class MiniSpectro:
         self.reserved = bytearray(unit_info.arybyReserved)
         self.wl_upper = unit_info.usWaveLengthUpper
         self.wl_lower = unit_info.usWaveLengthLower
+
+        if 1 in self.unit_id.find('1'):  # Check 2nd character in unit_id string
+            self.sensor_size = 256       # to determine senssor size
+        elif 1 in self.unit_id.find('2'):
+            self.sensor_size = 512
+        elif 1 in self.unit_id.find('3'):
+            self.sensor_size = 1024
+        elif 1 in self.unit_id.find('4'):
+            self.sensor_size = 2048
     
     def write_unit_information(self, flag=None):
         """
