@@ -124,11 +124,15 @@ class MiniSpectro:
     
     def set_default(self):
         """
-        Set all parameters to default
+        Set all parameters to default.
         """
         DLL.USB_SetEepromDefaultParameter(self._handle, 0)
     
     def read_unit_information(self):
+        """
+        Read device information.
+        The sensor size can be obtained knowing the unit ID.
+        """
         DLL.USB_ReadUnitInformation(self._handle, unit_info)[0]
         self.unit_id = bytearray(unit_info.arybyUnitID).decode('ascii')
         self.sensor_name = bytearray(unit_info.arybySensorName).decode('ascii')
