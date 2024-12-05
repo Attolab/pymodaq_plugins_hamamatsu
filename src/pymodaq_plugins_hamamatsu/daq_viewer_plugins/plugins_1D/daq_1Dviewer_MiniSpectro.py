@@ -13,22 +13,16 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
     This object inherits all functionalities to communicate with PyMoDAQ's DAQ_Viewer module through inheritance via
     DAQ_Viewer_base. It makes a bridge between the DAQ_Viewer module and the Python wrapper of a particular instrument.
 
+    This plugin should work with Hamamatsu mini-spectrometers connected with USB on Windows machines only (Python wrapper uses
+    .NET libraries to communicate with the device). It has been tested with C10083CA (TM-CCD series) and C9913GC (TG-cooled NIR-I)
+    mini-spectrometers.
 
-    TODO Complete the docstring of your plugin with:
-        * The set of instruments that should be compatible with this instrument plugin.
-        * With which instrument it has actually been tested.
-        * The version of PyMoDAQ during the test.
-        * The version of the operating system.
-        * Installation instructions: what manufacturer's drivers should be installed to make it run?
+    Tested with PyMoDAQ 4.4.7 on Windows 11.
 
-    Attributes:
-    -----------
-    controller: object
-        The particular object that allow the communication with the hardware, in general a python wrapper around the
-         hardware library.
-         
-    # TODO add your particular attributes here if any
-
+    The "specu1b.dll" driver is required and is obtained through the installation of Hamamatsu Tokuspec software. This plugin
+    should work with the .dll file in its default location (C:\Program Files\Hamamatsu\TokuSpec) but make sure to change its
+    path in the python wrapper "minispectro.py" in the case you place it somewhere else. This .dll file can also be found in
+    the installation files of the Hamamatsu Evaluation Software originally provided with the device CD.
     """
     params = comon_parameters+[
         ## TODO for your custom plugin
