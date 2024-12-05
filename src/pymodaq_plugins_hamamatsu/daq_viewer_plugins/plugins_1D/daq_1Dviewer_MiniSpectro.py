@@ -24,10 +24,12 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
     path in the python wrapper "minispectro.py" in the case you place it somewhere else. This .dll file can also be found in
     the installation files of the Hamamatsu Evaluation Software originally provided with the device CD.
     """
-    params = comon_parameters+[
-        ## TODO for your custom plugin
-        # elements to be added here as dicts in order to control your custom stage
-        ############
+    params = comon_parameters + [
+        {'title': 'Device ID', 'name': 'unit_id', 'type': 'str', 'value': '', 'readonly': True},
+        {'title': 'Sensor name', 'name': 'sensor_name', 'type': 'str', 'value': '', 'readonly': True},
+        {'title': 'Serial number', 'name': 'serial_number', 'type': 'str', 'value': '', 'readonly': True},
+        {'title': 'Lower wl', 'name': 'lower_wl', 'type': 'str', 'value': '', 'readonly': True},
+        {'title': 'Upper wl', 'name': 'upper_wl', 'type': 'str', 'value': '', 'readonly': True}
         ]
 
     def ini_attributes(self):
@@ -68,7 +70,13 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
         self.ini_detector_init(slave_controller=controller)
 
         if self.is_master:
-            self.controller = MiniSpectro()  #instantiate you driver with whatever arguments are needed
+            self.controller = MiniSpectro()
+
+        self.settings.child('unit_id').setValue(self.controller.unit_id)
+        self.settings.child('sensor_name').setValue(self.controller.sensor_name)
+        self.settings.child('serial_number').setValue(self.controller.serial_number)
+        self.settings.child('lower_wl').setValue(self.controller.lower_wl)
+        self.settings.child('upper_wl').setValue(self.controller.upper_wl)
 
         data_x_axis = self.controller.get_sensor_data()[0]  # if possible
         self.x_axis = Axis(data=data_x_axis, label='Pixels', units='', index=0)
