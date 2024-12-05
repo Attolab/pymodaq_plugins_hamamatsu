@@ -6,21 +6,13 @@ from pymodaq.utils.parameter import Parameter
 
 from pymodaq_plugins_hamamatsu.hardware.minispectro import MiniSpectro
 
-# Text for git capital letters issue in file name
 
-# TODO:
-# (1) change the name of the following class to DAQ_1DViewer_TheNameOfYourChoice
-# (2) change the name of this file to daq_1Dviewer_TheNameOfYourChoice ("TheNameOfYourChoice" should be the SAME
-#     for the class name and the file name.)
-# (3) this file should then be put into the right folder, namely IN THE FOLDER OF THE PLUGIN YOU ARE DEVELOPING:
-#     pymodaq_plugins_my_plugin/daq_viewer_plugins/plugins_1D
 class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
-    """ Instrument plugin class for a 1D viewer.
+    """ Instrument plugin class for Hamamatsu USB Mini-spectrometers.
     
     This object inherits all functionalities to communicate with PyMoDAQ's DAQ_Viewer module through inheritance via
     DAQ_Viewer_base. It makes a bridge between the DAQ_Viewer module and the Python wrapper of a particular instrument.
 
-    C10083CA USB Hamamatsu mini-spectrometer
 
     TODO Complete the docstring of your plugin with:
         * The set of instruments that should be compatible with this instrument plugin.
@@ -45,8 +37,6 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
         ]
 
     def ini_attributes(self):
-        #  TODO declare the type of the wrapper (and assign it to self.controller) you're going to use for easy
-        #  autocompletion
         self.controller: MiniSpectro = None
 
         # TODO declare here attributes you want/need to init with a default value
@@ -64,8 +54,7 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
         ## TODO for your custom plugin
         if param.name() == "a_parameter_you've_added_in_self.params":
            self.controller.your_method_to_apply_this_param_change()
-#        elif ...
-        ##
+
 
     def ini_detector(self, controller=None):
         """Detector communication initialization
@@ -87,8 +76,6 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
         if self.is_master:
             self.controller = MiniSpectro(device_name='tm_ccd')  #instantiate you driver with whatever arguments are needed
 
-        ## TODO for your custom plugin
-        # get the x_axis (you may want to to this also in the commit settings if x_axis may have changed
         data_x_axis = self.controller.get_sensor_data()[0]  # if possible
         self.x_axis = Axis(data=data_x_axis, label='Pixels', units='', index=0)
 
@@ -127,14 +114,11 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
                                                                 labels=['Spectro'],
                                                                 axes=[self.x_axis])]))
 
-    
     def stop(self):
-        """Stop the current grab hardware wise if necessary"""
-
-        self.controller.close()  # when writing your own plugin replace this line
+        """
+        Stop the current grab by emitting a status. Works by stopping to call get_sensor_data() function)
+        """
         self.emit_status(ThreadCommand('Update_Status', ['Some info you want to log']))
-        ##############################
-        return ''
 
 
 if __name__ == '__main__':
