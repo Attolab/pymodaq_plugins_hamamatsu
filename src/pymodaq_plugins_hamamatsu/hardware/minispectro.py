@@ -51,18 +51,6 @@ class MiniSpectro:
     """
     
     def __init__(self):
-
-        # _pids = {
-        #     'proto': 0x2900,        # Old TG Series
-        #     'tg': 0x2905,           # *[C9404MC], *[C9405MC], C9406GC
-        #     'tg_cooled': 0x2907,    # C9913GC, C9914GB
-        #     'tm': 0x2908,           # C10082MD, C10083MD
-        #     'tg_ccd': 0x290D,       # C9404CA, C9404CAH, C9405CB, *[C9405CA]
-        #     'tm_ccd': 0x2909,       # C10082CA, C10083CA, C10082CAH, C10083CAH
-        #     'tg_raman1': 0x2909,    # C11713CA
-        #     'tg_raman2': 0x290D     # C11714CA, C11714CB
-        # }
-
         for dev in usb.core.find(find_all=True):
             if hex(dev.idProduct).find("0x290") == 0:       # We make the assumption only Mini-spectrometers
                 print("Hamamatsu Mini-spectrometer found")  # devices have a pid starting with 0x290
