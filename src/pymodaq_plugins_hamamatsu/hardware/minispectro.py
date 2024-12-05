@@ -229,14 +229,18 @@ class MiniSpectro:
 
         Returns
         -------
-        x: numpy.array()
+        pixel_array: numpy.array()
             1D pixel array of device sensor
-        y: numpy.array()
+        wl_array: numpy.array()
+            1D array of wavelengths from lower_wl to upper_wl
+        intensity: numpy.array()
             1D measured intensity array with values between 0 and 2^16-1 (65535)
         """
-        x = np.linspace(0, self.sensor_size-1, self.sensor_size)
-        y = np.array(DLL.USB_GetSensorData(self._handle, self._pipe, self.sensor_size, self.buffer_array)[1])
-        return x, y
+        pixel_array = np.linspace(0, self.sensor_size-1, self.sensor_size)
+        wl_array = np.linspace(self.lower_wl, self.upper_wl, self.sensor_size)
+        intensity = np.array(DLL.USB_GetSensorData(self._handle, self._pipe, self.sensor_size, self.buffer_array)[1])
+
+        return pixel_array, wl_array, intensity
 
     def close(self):
         """
