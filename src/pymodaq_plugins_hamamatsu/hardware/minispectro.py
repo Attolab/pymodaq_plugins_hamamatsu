@@ -29,18 +29,25 @@ unit_info = UNIT_INFORMATION()
 class MiniSpectro:
     """
     Hamamatsu Minispectrometers class
-
-    Attributes
-    ----------
-    device_name: str
-        Name of the target Hamamatsu Minispectrometer
     
     Methods
     -------
     get_parameter()
-        Get parameters from target device
-    ...
-
+        Get currently set parameters (integration time, gain, trigger modes).
+    set_parameter(integ_time, gain, trigger_edge, trigger_mode)
+        Set specified parameter with specified value.
+    set_default()
+        Set all parameters to default.
+    read_unit_information()
+        Read device information.
+    write_unit_information()
+        Write information into USB device.
+    read_calibration_value()
+        Write calibration values with original values.
+    get_sensor_data()
+        Get sensor data currently in buffer and wipe buffer.
+    close()
+        Close device.
     """
     
     def __init__(self):
@@ -88,7 +95,7 @@ class MiniSpectro:
         """
         Get currently set parameters.
 
-        Parameters
+        Returns
         ----------
         integration_time: int
             Range is 5000µs-10000000µs (5ms-10s). The minimum integration times
@@ -118,7 +125,25 @@ class MiniSpectro:
     def set_parameter(self, integ_time=None, gain=None, trigger_edge=None, trigger_mode=None):
         """
         Set specified parameter with specified value.
-        Integration time, gain, trigger edge and trigger mode can be set 
+        Integration time, gain, trigger edge and trigger mode can be set
+
+        Parameters
+        ----------
+        integration_time: int
+            Range is 5000µs-10000000µs (5ms-10s). The minimum integration times
+            differ depending on the model. Minimum is 10000 µs for C10083CA.
+        gain: hex
+            0x00 (Low gain)
+            0x01 (High gain)
+            0xFF (Gain switching function is unavailable)
+        trigger_edge: hex
+            0x00 (Rising edge (H level))
+            0x01 (Falling edge (L level))
+            0xFF (External trigger function is unavailable)
+        trigger_mode: hex
+            0x00 (Rising edge (H level))
+            0x01 (Falling edge (L level))
+            0xFF (External trigger function is unavailable)
         """
         if integ_time is not None:
             DLL.USB_GetParameter(self._handle, unit_param)[1].unIntegrationTime = integ_time
@@ -139,7 +164,23 @@ class MiniSpectro:
     def read_unit_information(self):
         """
         Read device information.
-        The sensor size can be obtained knowing the unit ID.
+
+        Returns
+        -------
+        unit_id: str
+            The Hamamatsu device ID starting with 1 letter and 1 number.
+        sensor_name: str
+            The name of the sensor used in the spectrometer
+        serial_number: str
+            Serial number of the device.
+        reserved: str
+            Reserved and unused bytes according to .DLL documentation
+        wl_upper: int
+            Upper wavelength the spectrometer is set to detect. Makes it
+            possible to bound to the upper/last pixel on device sensor.
+        wl_lower: int
+            Lower wavelength the spectrometer is set to detect. Makes it
+            possible to bound to the lower/first pixel on device sensor.
         """
         DLL.USB_ReadUnitInformation(self._handle, unit_info)[0]
         self.unit_id = bytearray(unit_info.arybyUnitID).decode('ascii')
@@ -150,7 +191,7 @@ class MiniSpectro:
         self.wl_lower = unit_info.usWaveLengthLower
 
         if self.unit_id.find('1') == 1:  # Check 2nd character in unit_id string
-            self.sensor_size = 256       # to determine senssor size
+            self.sensor_size = 256       # to determine sensor size
         elif self.unit_id.find('2') == 1:
             self.sensor_size = 512
         elif self.unit_id.find('3') == 1:
@@ -160,8 +201,8 @@ class MiniSpectro:
     
     def write_unit_information(self, flag=None):
         """
-        Writes information into USB device. Unit ID, sensor name, serial number and 
-        spectral response range (upper and lower limits) can be written.
+        Write information into USB device. Unit ID, sensor name, serial number and 
+        spectral response range (upper and lower limits) are written.
 
         Parameters
         ----------
@@ -171,21 +212,48 @@ class MiniSpectro:
         DLL.USB_WriteUnitInformation(self._handle, unit_info, flag)
 
     def read_calibration_value(self):
+        """
+        Reads calibration coefficients saved in device
+
+        Returns
+        -------
+        calibration_list: list(float)
+            List of 6 float values corresponding to A, B1, B2, B3, B4 and B5 calibration coefficients.
+            λ(nm) = A + B1*pix + B2*pix² + B3*pix³ + B4*pix⁴ + B5*pix⁵ with pix any pixel on sensor.
+        """
         DLL.USB_ReadCalibrationValue(self._handle, self._c_array)
         self.calibration_list = list(self._c_array)
 
     def write_calibration_value(self, flag=None):
         """
-        Write calibration values with original values. flag need to be 0xAA
+        Write calibration values with original values.
+        
+        Parameters
+        ----------
+        flag: hex
+            The flag value needs to be 0xAA to allow writing to device.
         """
         DLL.USB_WriteCalibrationValue(self._handle, self._origin_c_array, flag)
 
     def get_sensor_data(self):
+        """
+        Get sensor data currently in buffer and wipe buffer.
+
+        Returns
+        -------
+        x: numpy.array()
+            1D pixel array of device sensor
+        y: numpy.array()
+            1D measured intensity array with values between 0 and 2^16-1 (65535)
+        """
         x = np.linspace(0, self.sensor_size-1, self.sensor_size)
         y = np.array(DLL.USB_GetSensorData(self._handle, self._pipe, self.sensor_size, self.buffer_array)[1])
         return x, y
 
     def close(self):
+        """
+        Close device.
+        """
         DLL.USB_ClosePipe(self._handle)
         DLL.USB_CloseDevice(self._handle)
 
