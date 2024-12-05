@@ -38,7 +38,7 @@ Mini-spectrometers
 
 The `specu1b.dll` driver (.NET) file only is necessary for interfacing mini-spectrometers. It
 can be obtained either by installing `Tokuspec`__ software (default driver location is in
-``C:\\Program Files\\Hamamatsu\\TokuSpec``) or from the originally supplied device CD.
+``C:\Program Files\Hamamatsu\TokuSpec``) or from the originally supplied device CD.
 
 The default driver location is used in this plugin, make sure to update its path in the
 python wrapper ``hardware/minispectro.py`` if you store it somewhere else.
