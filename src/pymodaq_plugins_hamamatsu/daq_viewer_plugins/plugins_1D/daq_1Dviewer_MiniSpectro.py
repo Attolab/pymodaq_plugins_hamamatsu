@@ -74,7 +74,7 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
         self.ini_detector_init(slave_controller=controller)
 
         if self.is_master:
-            self.controller = MiniSpectro(device_name='tm_ccd')  #instantiate you driver with whatever arguments are needed
+            self.controller = MiniSpectro()  #instantiate you driver with whatever arguments are needed
 
         data_x_axis = self.controller.get_sensor_data()[0]  # if possible
         self.x_axis = Axis(data=data_x_axis, label='Pixels', units='', index=0)
