@@ -163,20 +163,20 @@ class MiniSpectro:
             Serial number of the device.
         reserved: str
             Reserved and unused bytes according to .DLL documentation
-        wl_upper: int
-            Upper wavelength the spectrometer is set to detect. Makes it
-            possible to bound to the upper/last pixel on device sensor.
         wl_lower: int
             Lower wavelength the spectrometer is set to detect. Makes it
             possible to bound to the lower/first pixel on device sensor.
+        wl_upper: int
+            Upper wavelength the spectrometer is set to detect. Makes it
+            possible to bound to the upper/last pixel on device sensor.
         """
         DLL.USB_ReadUnitInformation(self._handle, unit_info)[0]
         self.unit_id = bytearray(unit_info.arybyUnitID).decode('ascii')
         self.sensor_name = bytearray(unit_info.arybySensorName).decode('ascii')
         self.serial_number = bytearray(unit_info.arybySerialNumber).decode('ascii')
         self.reserved = bytearray(unit_info.arybyReserved)
-        self.wl_upper = unit_info.usWaveLengthUpper
-        self.wl_lower = unit_info.usWaveLengthLower
+        self.lower_wl = unit_info.usWaveLengthLower
+        self.upper_wl = unit_info.usWaveLengthUpper
 
         if self.unit_id.find('1') == 1:  # Check 2nd character in unit_id string
             self.sensor_size = 256       # to determine sensor size
