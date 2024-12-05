@@ -15,6 +15,9 @@ clr.AddReference("specu1b")
 
 from specu1b_DLL import specu1b, UNIT_PARAMETER, UNIT_INFORMATION
 
+import usb.core
+import usb.util
+
 import time
 import numpy as np
 import System
@@ -40,27 +43,32 @@ class MiniSpectro:
 
     """
     
-    def __init__(self, device_name='tm_ccd'):
+    def __init__(self):
 
-        _pids = {
-            'proto': 0x2900,        # Old TG Series
-            'tg': 0x2905,           # *[C9404MC], *[C9405MC], C9406GC
-            'tg_cooled': 0x2907,    # C9913GC, C9914GB
-            'tm': 0x2908,           # C10082MD, C10083MD
-            'tg_ccd': 0x290D,       # C9404CA, C9404CAH, C9405CB, *[C9405CA]
-            'tm_ccd': 0x2909,       # C10082CA, C10083CA, C10082CAH, C10083CAH
-            'tg_raman1': 0x2909,    # C11713CA
-            'tg_raman2': 0x290D     # C11714CA, C11714CB
-        }
+        # _pids = {
+        #     'proto': 0x2900,        # Old TG Series
+        #     'tg': 0x2905,           # *[C9404MC], *[C9405MC], C9406GC
+        #     'tg_cooled': 0x2907,    # C9913GC, C9914GB
+        #     'tm': 0x2908,           # C10082MD, C10083MD
+        #     'tg_ccd': 0x290D,       # C9404CA, C9404CAH, C9405CB, *[C9405CA]
+        #     'tm_ccd': 0x2909,       # C10082CA, C10083CA, C10082CAH, C10083CAH
+        #     'tg_raman1': 0x2909,    # C11713CA
+        #     'tg_raman2': 0x290D     # C11714CA, C11714CB
+        # }
 
-        self._handle = DLL.USB_OpenDevice(_pids[device_name])
-        print('handle = ', self._handle)
+        for dev in usb.core.find(find_all=True):
+            if hex(dev.idProduct).find("0x290") == 0:       # We make the assumption only Mini-spectrometers
+                print("Hamamatsu Mini-spectrometer found")  # devices have a pid starting with 0x290
+                pid = dev.idProduct
 
-        self._check = DLL.USB_CheckDevice(self._handle)
-        print('check = ', self._check)
+        self._handle = DLL.USB_OpenDevice(pid)  # Get index of spectrometer from pid
+
+        if DLL.USB_CheckDevice(self._handle) == 11:
+            print('Check connection success')
+        else:
+            raise ValueError('Check connection failed, please close or reconnect device')
 
         self._pipe = DLL.USB_OpenPipe(self._handle)
-        print('device_pipe =', self._pipe)
 
         self._c_array = System.Array[System.Double]([0.0 for _ in range(6)])    # 6 calibration values
         self._origin_c_array = System.Array[System.Double]([206.6901787,        # Values from TokusPec at 1st boot
@@ -70,12 +78,12 @@ class MiniSpectro:
                                                             5.788371505e-12,
                                                             -1.2738255e-15])
         
-        self.buffer_array = System.Array[System.UInt16]([0 for _ in range(2048)])
-
         self.read_unit_information()
         self.get_parameter()
         self.read_calibration_value()
-    
+
+        self.buffer_array = System.Array[System.UInt16]([0 for _ in range(self.sensor_size)])
+
     def get_parameter(self):
         """
         Get currently set parameters.
@@ -141,13 +149,13 @@ class MiniSpectro:
         self.wl_upper = unit_info.usWaveLengthUpper
         self.wl_lower = unit_info.usWaveLengthLower
 
-        if 1 in self.unit_id.find('1'):  # Check 2nd character in unit_id string
+        if self.unit_id.find('1') == 1:  # Check 2nd character in unit_id string
             self.sensor_size = 256       # to determine senssor size
-        elif 1 in self.unit_id.find('2'):
+        elif self.unit_id.find('2') == 1:
             self.sensor_size = 512
-        elif 1 in self.unit_id.find('3'):
+        elif self.unit_id.find('3') == 1:
             self.sensor_size = 1024
-        elif 1 in self.unit_id.find('4'):
+        elif self.unit_id.find('4') == 1:
             self.sensor_size = 2048
     
     def write_unit_information(self, flag=None):
@@ -173,8 +181,8 @@ class MiniSpectro:
         DLL.USB_WriteCalibrationValue(self._handle, self._origin_c_array, flag)
 
     def get_sensor_data(self):
-        x = np.linspace(0, 2047, 2048)
-        y = np.array(DLL.USB_GetSensorData(self._handle, self._pipe, 2048, self.buffer_array)[1])
+        x = np.linspace(0, self.sensor_size-1, self.sensor_size)
+        y = np.array(DLL.USB_GetSensorData(self._handle, self._pipe, self.sensor_size, self.buffer_array)[1])
         return x, y
 
     def close(self):
@@ -183,4 +191,4 @@ class MiniSpectro:
 
 
 if __name__ == "__main__":
-    spectro = MiniSpectro('tm_ccd')
+    spectro = MiniSpectro()
