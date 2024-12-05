@@ -79,12 +79,12 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
         data_x_axis = self.controller.get_sensor_data()[0]  # if possible
         self.x_axis = Axis(data=data_x_axis, label='Pixels', units='', index=0)
 
-        # TODO for your custom plugin. Initialize viewers panel with the future type of data
-        # self.dte_signal_temp.emit(DataToExport(name='MiniSpectro',
-        #                                        data=[DataFromPlugins(name='Mini-spectrometer',
-        #                                                              data=[np.array([10 for _ in range(2048)])],
-        #                                                              dim='Data1D', labels=['Intensity'],
-        #                                                              axes=[self.x_axis])]))
+        # Initialize viewers panel with the future type of data
+        self.dte_signal_temp.emit(DataToExport(name='MiniSpectro',
+                                               data=[DataFromPlugins(name='Mini-spectrometer',
+                                                                     data=[np.array([0 for _ in range(self.controller.sensor_size)])],
+                                                                     dim='Data1D', labels=['Spectrometer'],
+                                                                     axes=[self.x_axis])]))
 
         info = "Whatever info you want to log"
         initialized = True
@@ -111,7 +111,7 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
                                           data=[DataFromPlugins(name='Mini-spectrometer',
                                                                 data=data_tot,
                                                                 dim='Data1D',
-                                                                labels=['Spectro'],
+                                                                labels=['Spectrometer'],
                                                                 axes=[self.x_axis])]))
 
     def stop(self):
