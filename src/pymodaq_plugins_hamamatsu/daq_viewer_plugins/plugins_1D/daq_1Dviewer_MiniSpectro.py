@@ -78,8 +78,8 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
         self.settings.child('lower_wl').setValue(self.controller.lower_wl)
         self.settings.child('upper_wl').setValue(self.controller.upper_wl)
 
-        data_x_axis = self.controller.get_sensor_data()[0]  # if possible
-        self.x_axis = Axis(data=data_x_axis, label='Pixels', units='', index=0)
+        data_x_axis = self.controller.get_sensor_data()[1]*1e-9
+        self.x_axis = Axis(data=data_x_axis, label='Wavelength', units='m', index=0)
 
         # Initialize viewers panel with the future type of data
         self.dte_signal_temp.emit(DataToExport(name='MiniSpectro',
@@ -108,7 +108,7 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
             others optionals arguments
         """
         # Synchrone version (blocking function)
-        data_tot = self.controller.get_sensor_data()[1]
+        data_tot = self.controller.get_sensor_data()[2]
         self.dte_signal.emit(DataToExport(name='MiniSpectro',
                                           data=[DataFromPlugins(name='Mini-spectrometer',
                                                                 data=data_tot,
