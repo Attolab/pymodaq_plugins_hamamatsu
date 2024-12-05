@@ -14,7 +14,7 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
     DAQ_Viewer_base. It makes a bridge between the DAQ_Viewer module and the Python wrapper of a particular instrument.
 
     This plugin should work with Hamamatsu mini-spectrometers connected with USB on Windows machines only (Python wrapper uses
-    .NET libraries to communicate with the device). It has been tested with C10083CA (TM-CCD series) and C9913GC (TG-cooled NIR-I)
+    .NET libraries to communicate with the device). It has been tested with C10083CA (TM-CCD) and C9913GC (TG-cooled NIR-I)
     mini-spectrometers.
 
     Tested with PyMoDAQ 4.4.7 on Windows 11.

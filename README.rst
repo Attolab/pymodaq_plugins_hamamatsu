@@ -20,7 +20,7 @@ Below is the list of instruments included in this plugin
 Viewer1D
 ++++++++
 
-* **Mini-spectrometers**: USB spectrometers from the "mini-spectrometers" Hamamatsu series.
+* **Mini-spectrometers**: USB spectrometers from the Hamamatsu Mini-spectrometers series.
 
 Viewer2D
 ++++++++
@@ -38,12 +38,12 @@ Mini-spectrometers
 
 The `specu1b.dll` driver (.NET) file only is necessary for interfacing mini-spectrometers. It
 can be obtained either by installing `Tokuspec`__ software (default driver location is in
-`C:\\Program Files\\Hamamatsu\\TokuSpec`) or from the originally supplied device CD.
+``C:\\Program Files\\Hamamatsu\\TokuSpec``) or from the originally supplied device CD.
 
 The default driver location is used in this plugin, make sure to update its path in the
-python wrapper `hardware/minispectro.py` if you store it somewhere else.
+python wrapper ``hardware/minispectro.py`` if you store it somewhere else.
 
-Tested with a C10083CA mini-spectrometer with PyMoDAQ 4.4.7 on Windows 11
+Tested with C10083CA (TM-CCD) and C9913GC (TG-cooled NIR-I) mini-spectrometers with PyMoDAQ 4.4.7 on Windows 11.
 
 __ https://hamamatsu-software.de/index.php?l=int&u=tokuspec
 
