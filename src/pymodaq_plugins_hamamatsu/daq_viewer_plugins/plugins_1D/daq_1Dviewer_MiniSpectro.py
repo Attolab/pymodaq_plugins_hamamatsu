@@ -94,7 +94,8 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
 
     def close(self):
         """Terminate the communication protocol"""
-        self.controller.close()
+        if self.controller is not None:
+            self.controller.close()
 
     def grab_data(self, Naverage=1, **kwargs):
         """Start a grab from the detector
