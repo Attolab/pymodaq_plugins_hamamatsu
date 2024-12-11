@@ -97,9 +97,9 @@ class MiniSpectro:
             0x01 (Falling edge (L level))
             0xFF (External trigger function is unavailable)
         trigger_mode: hex
-            0x00 (Rising edge (H level))
-            0x01 (Falling edge (L level))
-            0xFF (External trigger function is unavailable)
+            0x00 (Internal trigger mode (freerun))
+            0x01 (External trigger mode 1 (edge trigger detection))
+            0x02 (External trigger mode 2 (gate trigger mode))
         reserved_param:
             Reserved byte
         """
@@ -129,9 +129,9 @@ class MiniSpectro:
             0x01 (Falling edge (L level))
             0xFF (External trigger function is unavailable)
         trigger_mode: hex
-            0x00 (Rising edge (H level))
-            0x01 (Falling edge (L level))
-            0xFF (External trigger function is unavailable)
+            0x00 (Internal trigger mode (freerun))
+            0x01 (External trigger mode 1 (edge trigger detection))
+            0x02 (External trigger mode 2 (gate trigger mode))
         """
         if integ_time is not None:
             DLL.USB_GetParameter(self._handle, unit_param)[1].unIntegrationTime = integ_time
