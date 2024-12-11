@@ -28,15 +28,20 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
         {'title': 'Device ID', 'name': 'unit_id', 'type': 'str', 'value': '', 'readonly': True},
         {'title': 'Sensor name', 'name': 'sensor_name', 'type': 'str', 'value': '', 'readonly': True},
         {'title': 'Serial number', 'name': 'serial_number', 'type': 'str', 'value': '', 'readonly': True},
-        {'title': 'Lower wl', 'name': 'lower_wl', 'type': 'str', 'value': '', 'readonly': True},
-        {'title': 'Upper wl', 'name': 'upper_wl', 'type': 'str', 'value': '', 'readonly': True}
+        {'title': 'Lower λ', 'name': 'lower_wl', 'type': 'int', 'value': 0, 'suffix': 'nm', 'readonly': True},
+        {'title': 'Upper λ', 'name': 'upper_wl', 'type': 'int', 'value': 0, 'suffix': 'nm', 'readonly': True},
+        {'title': 'Pixels', 'name': 'pixel_nb', 'type': 'str', 'value': '', 'readonly': True},
+        {'title': 'Trigger mode:', 'name': 'trig_mode', 'type': 'list',
+                        'limits': ['Internal', 'External (edge)', 'External (gate)'], 'value': 'Internal'},
+        {'title': 'Trigger edge:', 'name': 'trig_edge', 'type': 'list',
+                        'limits': ['Rising edge', 'Falling edge'], 'value': 'Rising edge'},
+        {'title': 'Gain mode', 'name': 'gain', 'type': 'list', 'limits': ['Low gain', 'High gain', 'None'], 'value': ''},
+        {'title': 'Integration time', 'name': 'integration_time', 'type': 'int', 'value': 100, 'min': 5, 'max': 10000,
+                        'siPrefix': True, 'suffix': 'ms', 'tip': 'MIN = 5 ms, MAX = 10000 ms'}
         ]
 
     def ini_attributes(self):
         self.controller: MiniSpectro = None
-
-        # TODO declare here attributes you want/need to init with a default value
-
         self.x_axis = None
 
     def commit_settings(self, param: Parameter):
@@ -47,9 +52,20 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
         param: Parameter
             A given parameter (within detector_settings) whose value has been changed by the user
         """
-        ## TODO for your custom plugin
-        if param.name() == "a_parameter_you've_added_in_self.params":
-           self.controller.your_method_to_apply_this_param_change()
+        if param.name() == "integration_time":
+            self.controller.set_parameter(integ_time=int(self.settings['integration_time']*1e3))  # Convert from ms to µs
+        if param.name() == 'trig_mode':
+            if param.value() == 'Internal':
+                self.controller.set_parameter(trigger_mode=0x00)
+            elif param.value() == 'External (edge)':
+                self.controller.set_parameter(trigger_mode=0x01)
+            elif param.value() == 'External (gate)':
+                self.controller.set_parameter(trigger_mode=0x02)
+        if param.name() == 'trig_edge':
+            if param.value() == 'Rising edge':
+                self.controller.set_parameter(trigger_mode=0x00)
+            elif param.value() == 'Falling edge':
+                self.controller.set_parameter(trigger_mode=0x01)
 
 
     def ini_detector(self, controller=None):
@@ -77,6 +93,16 @@ class DAQ_1DViewer_MiniSpectro(DAQ_Viewer_base):
         self.settings.child('serial_number').setValue(self.controller.serial_number)
         self.settings.child('lower_wl').setValue(self.controller.lower_wl)
         self.settings.child('upper_wl').setValue(self.controller.upper_wl)
+        self.settings.child('pixel_nb').setValue(self.controller.sensor_size)
+
+        # Check if device handles external trigger
+        if '0xff' in self.controller.trigger_edge:
+            self.settings.child('trig_mode').setValue('Internal')
+            self.settings.child('trig_mode').setReadonly()
+        
+        if '0xff' in self.controller.gain:
+            self.settings.child('gain').setValue('None')
+            self.settings.child('gain').setReadonly()
 
         data_x_axis = self.controller.get_sensor_data()[1]*1e-9
         self.x_axis = Axis(data=data_x_axis, label='Wavelength', units='m', index=0)
