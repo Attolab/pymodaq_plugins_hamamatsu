@@ -5,7 +5,7 @@ SHORT_PLUGIN_NAME = 'hamamatsu'  #to be modified, for instance daqmx then rename
 # (pymodaq_plugins_template become pymodaq_plugins_daqmx for instance)
 
 package-url = 'https://github.com/Attolab/pymodaq_plugins_hamamatsu' #to modify
-description = 'Plugin for Hamamatsu cameras based on DCAM-API'
+description = 'Plugin for Hamamatsu instuments including DCAM-API based cameras and USB mini-spectrometers'
 
 author = 'Romain Géneaux'
 author-email = 'romain.geneaux@cea.fr'
@@ -13,4 +13,11 @@ license = 'MIT'
 
 [plugin-install]
 #packages required for your plugin:
-packages-required = ['numpy', 'pymodaq<4.0', 'pylablib']
+packages-required = ['numpy', 'pymodaq', 'pylablib', 'pythonnet']
+
+[features]  # defines the plugin features contained into this plugin
+instruments = true  # true if plugin contains instrument classes (else false, notice the lowercase for toml files)
+extensions = false  # true if plugins contains dashboard extensions
+models = false  # true if plugins contains pid models or other models (optimisation...)
+h5exporters = false  # true if plugin contains custom h5 file exporters
+scanners = false  # true if plugin contains custom scan layout (daq_scan extensions)
